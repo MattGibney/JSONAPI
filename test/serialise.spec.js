@@ -13,6 +13,16 @@ describe('Serialize', function() {
       'Structure is correct'
     );
   });
+  it('Respects option [noData]', function() {
+    const dataIn = {};
+    const expectedOutput = {};
+
+    assert.deepEqual(
+      jsonAPI.serialise({}, dataIn, { noData: true }),
+      expectedOutput,
+      'Structure is correct'
+    );
+  });
   it('Creates the basic structure for multiple elements', function() {
     const dataIn = [ {} ];
     const expectedOutput = {data: [ {} ]};
@@ -98,39 +108,39 @@ describe('Serialize', function() {
     });
   });
 
-  describe('Maps Relationships', function() {
-    it('Maps single relationships', function() {
-      const dataIn = {
-        idKey: 222,
-        authorId: 1,
-      };
-      const expectedOutput = {
-        data: {
-          id: 222,
-          type: 'articles',
-          relationships: {
-            author: {
-              data: { type: 'author', id: 1 }
-            }
-          }
-        }
-      };
-      const mapperObject = {
-        id: 'idKey',
-        type: 'articles',
-        relationships: {
-          author: {
-            type: 'author',
-            id: 'authorId'
-          }
-        }
-      };
+  // describe('Maps Relationships', function() {
+  //   it('Maps single relationships', function() {
+  //     const dataIn = {
+  //       idKey: 222,
+  //       authorId: 1,
+  //     };
+  //     const expectedOutput = {
+  //       data: {
+  //         id: 222,
+  //         type: 'articles',
+  //         relationships: {
+  //           author: {
+  //             data: { type: 'author', id: 1 }
+  //           }
+  //         }
+  //       }
+  //     };
+  //     const mapperObject = {
+  //       id: 'idKey',
+  //       type: 'articles',
+  //       relationships: {
+  //         author: {
+  //           type: 'author',
+  //           id: 'authorId'
+  //         }
+  //       }
+  //     };
 
-      assert.deepEqual(
-        jsonAPI.serialise(mapperObject, dataIn),
-        expectedOutput,
-        'Single relationship mapped'
-      );
-    });
-  });
+  //     assert.deepEqual(
+  //       jsonAPI.serialise(mapperObject, dataIn),
+  //       expectedOutput,
+  //       'Single relationship mapped'
+  //     );
+  //   });
+  // });
 });

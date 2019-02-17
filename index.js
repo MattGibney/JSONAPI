@@ -46,14 +46,19 @@ let deserialiseObject = function(dataMapper, object) {
   return outObject;
 };
 
-exports.serialise = function(dataMapper, object) {
+exports.serialise = function(dataMapper, object, options = {}) {
+  let output = null;
   if(Array.isArray(object)) {
-    return {
-      data: object.map(obj => serialiseObject(dataMapper, obj))
-    };
+    output = object.map(obj => serialiseObject(dataMapper, obj));
+  } else {
+    output = serialiseObject(dataMapper, object);
+  }
+
+  if(options.noData) {
+    return output;
   }
   return {
-    data: serialiseObject(dataMapper, object)
+    data: output
   };
 };
 
