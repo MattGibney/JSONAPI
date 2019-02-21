@@ -98,39 +98,81 @@ describe('Deserialize', function() {
     });
   });
 
-  // describe('Maps Relationships', function() {
-  //   it('Maps single relationships', function() {
-  //     const expectedOutput = {
-  //       idKey: 222,
-  //       authorId: 1,
-  //     };
-  //     const dataIn = {
-  //       data: {
-  //         id: 222,
-  //         type: 'articles',
-  //         relationships: {
-  //           author: {
-  //             data: { type: 'author', id: 1 }
-  //           }
-  //         }
-  //       }
-  //     };
-  //     const mapperObject = {
-  //       id: 'idKey',
-  //       type: 'articles',
-  //       relationships: {
-  //         author: {
-  //           type: 'author',
-  //           id: 'authorId'
-  //         }
-  //       }
-  //     };
+  describe('Maps Relationships', function() {
+    it('Maps single relationships', function() {
+      const expectedOutput = {
+        idKey: 222,
+        authorId: 1,
+      };
+      const dataIn = {
+        data: {
+          id: 222,
+          type: 'articles',
+          relationships: {
+            author: {
+              data: { type: 'author', id: 1 }
+            }
+          }
+        }
+      };
+      const mapperObject = {
+        id: 'idKey',
+        type: 'articles',
+        relationships: {
+          author: {
+            type: 'author',
+            id: 'authorId'
+          }
+        }
+      };
 
-  //     assert.deepEqual(
-  //       jsonAPI.deserialise(mapperObject, dataIn),
-  //       expectedOutput,
-  //       'Single relationship mapped'
-  //     );
-  //   });
-  // });
+      assert.deepEqual(
+        jsonAPI.deserialise(mapperObject, dataIn),
+        expectedOutput,
+        'Single relationship mapped'
+      );
+    });
+
+    it('Maps multi relationships', function() {
+      const expectedOutput = {
+        idKey: 222,
+        authors: [
+          { idKey: 1 },
+          { idKey: 2 }
+        ],
+      };
+      const dataIn = {
+        data: {
+          id: 222,
+          type: 'articles',
+          relationships: {
+            authors: {
+              data: [
+                { type: 'author', id: 1 },
+                { type: 'author', id: 2 }
+              ]
+            }
+          }
+        }
+      };
+      const mapperObject = {
+        id: 'idKey',
+        type: 'articles',
+        relationships: {
+          authors: [
+            {
+              type: 'author',
+              id: 'authors.idKey'
+            }
+          ]
+        }
+      };
+
+      assert.deepEqual(
+        jsonAPI.deserialise(mapperObject, dataIn),
+        expectedOutput,
+        'multi relationship mapped'
+      );
+    });
+  });
 });

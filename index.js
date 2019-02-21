@@ -18,12 +18,30 @@ let serialiseObject = function(dataMapper, object) {
     Object.keys(dataMapper.relationships)
       .forEach(key => {
         let relationshipAttribute = outObject.relationships[key] = {};
-        relationshipAttribute.data = {};
-        if('id' in dataMapper.relationships[key]) {
-          relationshipAttribute.data.id = object[dataMapper.relationships[key].id];
-        }
-        if('type' in dataMapper.relationships[key]) {
-          relationshipAttribute.data.type = dataMapper.relationships[key].type;
+
+        if(Array.isArray(dataMapper.relationships[key])){
+          relationshipAttribute.data = [];
+          const idpath = dataMapper.relationships[key][0].id.split('.');
+          
+          object[idpath[0]].forEach(obj => {
+            let relationshipObject = {};
+            if('id' in dataMapper.relationships[key][0]) {
+              relationshipObject.id = obj[idpath[1]];
+            }
+            if('type' in dataMapper.relationships[key][0]) {
+              relationshipObject.type = dataMapper.relationships[key][0].type;
+            }
+            relationshipAttribute.data.push(relationshipObject);
+          });
+
+        } else {
+          relationshipAttribute.data = {}; 
+          if('id' in dataMapper.relationships[key]) {
+            relationshipAttribute.data.id = object[dataMapper.relationships[key].id];
+          }
+          if('type' in dataMapper.relationships[key]) {
+            relationshipAttribute.data.type = dataMapper.relationships[key].type;
+          }
         }
       });
   }
@@ -40,9 +58,25 @@ let deserialiseObject = function(dataMapper, object) {
       outObject[dataMapper.attributes[attr]] = object.attributes[attr];
     });
   }
-  // if('relationships' in dataMapper) {
-  //    
-  // }
+  if('relationships' in dataMapper) {
+    Object.keys(dataMapper.relationships)
+      .forEach(key => {
+        if(Array.isArray(dataMapper.relationships[key])){
+          outObject[dataMapper.relationships[key][0].id.split('.')[0]] = [];
+          object.relationships[key].data.forEach(obj => {
+            let relationshipObject = {};
+            relationshipObject[dataMapper.relationships[key][0].id.split('.')[1]] = obj.id;
+
+            outObject[dataMapper.relationships[key][0].id.split('.')[0]]
+              .push(relationshipObject);
+          });
+        } else {
+          if('id' in dataMapper.relationships[key]) {
+            outObject[dataMapper.relationships[key].id] = object.relationships[key].data.id;
+          }
+        }
+      });
+  }
   return outObject;
 };
 
