@@ -174,5 +174,42 @@ describe('Deserialize', function() {
         'multi relationship mapped'
       );
     });
+    it('Supports missing relationships', function() {
+      const expectedOutput = {
+        author: 1
+      };
+      const dataIn = {
+        data: {
+          relationships: {
+            author: {
+              data: {
+                id: 1,
+                type: 'authors'
+              }
+            }
+          }
+        }
+      };
+      const mapperObject = {
+        relationships: {
+          author: {
+            id: 'author',
+            type: 'authors'
+          },
+          publishers: [
+            {
+              id: 'publishers.id',
+              type: 'publishers'
+            }
+          ]
+        }
+      };
+
+      assert.deepEqual(
+        jsonAPI.deserialise(mapperObject, dataIn),
+        expectedOutput,
+        'Ignores relationships that are not specified'
+      );
+    });
   });
 });

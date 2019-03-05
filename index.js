@@ -61,18 +61,20 @@ let deserialiseObject = function(dataMapper, object) {
   if('relationships' in dataMapper) {
     Object.keys(dataMapper.relationships)
       .forEach(key => {
-        if(Array.isArray(dataMapper.relationships[key])){
-          outObject[dataMapper.relationships[key][0].id.split('.')[0]] = [];
-          object.relationships[key].data.forEach(obj => {
-            let relationshipObject = {};
-            relationshipObject[dataMapper.relationships[key][0].id.split('.')[1]] = obj.id;
+        if(object.relationships[key]) {
+          if(Array.isArray(dataMapper.relationships[key])){
+            outObject[dataMapper.relationships[key][0].id.split('.')[0]] = [];
+            object.relationships[key].data.forEach(obj => {
+              let relationshipObject = {};
+              relationshipObject[dataMapper.relationships[key][0].id.split('.')[1]] = obj.id;
 
-            outObject[dataMapper.relationships[key][0].id.split('.')[0]]
-              .push(relationshipObject);
-          });
-        } else {
-          if('id' in dataMapper.relationships[key]) {
-            outObject[dataMapper.relationships[key].id] = object.relationships[key].data.id;
+              outObject[dataMapper.relationships[key][0].id.split('.')[0]]
+                .push(relationshipObject);
+            });
+          } else {
+            if('id' in dataMapper.relationships[key]) {
+              outObject[dataMapper.relationships[key].id] = object.relationships[key].data.id;
+            }
           }
         }
       });
