@@ -1,7 +1,7 @@
 {
-  "name": "jsonapi",
-  "version": "1.0.1",
-  "description": "",
+  "name": "@moppler/jsonapi",
+  "version": "1.0.2",
+  "description": "Interface for (de)serializing objects into JSON API.",
   "main": "index.js",
   "scripts": {
     "test": "nyc --reporter=lcovonly mocha",
@@ -10,11 +10,14 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/"
+  },
   "devDependencies": {
     "eslint": "^5.12.1",
     "eslint-plugin-mocha": "^5.2.1",
     "mocha": "^5.2.0",
     "nodemon": "^1.18.9",
-    "nyc": "^13.3.0"
+    "nyc": "^14.1.1"
   }
 }
