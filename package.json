@@ -1,6 +1,6 @@
 {
   "name": "@moppler/jsonapi",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Interface for (de)serializing objects into JSON API.",
   "main": "index.js",
   "scripts": {
